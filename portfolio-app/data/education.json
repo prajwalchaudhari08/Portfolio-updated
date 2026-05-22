@@ -1,0 +1,22 @@
+[
+  {
+    "id": "edu-1",
+    "degree": "Master of Computer Applications (MCA)",
+    "institution": "Industrial Institute of Computer Research and Management (IICMR)",
+    "location": "Nigdi, Pune",
+    "period": "2022 – 2024",
+    "score": "CGPA: 7.71",
+    "status": "Completed",
+    "description": "Specialized in advanced computer applications, software engineering, and database management."
+  },
+  {
+    "id": "edu-2",
+    "degree": "Bachelor of Computer Applications (BCA)",
+    "institution": "Shri Shivaji Science College",
+    "location": "Amravati, Maharashtra",
+    "period": "2019 – 2022",
+    "score": "Percentage: 75%",
+    "status": "Completed",
+    "description": "Foundation in computer science, programming, and application development."
+  }
+]

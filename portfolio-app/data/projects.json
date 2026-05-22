@@ -1,0 +1,52 @@
+[
+  {
+    "id": "proj-1",
+    "title": "CMS Project",
+    "description": "Performed end-to-end manual testing for CMS modules to ensure application quality and workflow stability. Automated regression and critical user flows using Playwright with TypeScript. Collaborated with developers and business teams to validate requirements and resolve reported defects.",
+    "techStack": ["Playwright", "TypeScript", "CMS", "Manual Testing"],
+    "image": "",
+    "githubUrl": "",
+    "liveUrl": "",
+    "featured": true
+  },
+  {
+    "id": "proj-2",
+    "title": "YHD Project",
+    "description": "Executed functional and regression testing for complete application workflows. Performed API testing using Postman and Swagger for request and response validation. Developed reusable Playwright automation scripts for scalable test execution.",
+    "techStack": ["Playwright", "Postman", "Swagger", "API Testing"],
+    "image": "",
+    "githubUrl": "",
+    "liveUrl": "",
+    "featured": true
+  },
+  {
+    "id": "proj-3",
+    "title": "Appendix Project",
+    "description": "Conducted end-to-end manual testing to validate usability, business requirements, and application behavior. Designed and executed UI, functional, and regression test cases. Tracked defects and coordinated with developers for issue resolution and retesting.",
+    "techStack": ["Manual Testing", "UI Testing", "Regression Testing"],
+    "image": "",
+    "githubUrl": "",
+    "liveUrl": "",
+    "featured": false
+  },
+  {
+    "id": "proj-4",
+    "title": "School Apps Project",
+    "description": "Tested school management modules including attendance, student management, and administration systems. Executed smoke, regression, functional, and cross-browser testing across multiple devices. Prepared QA documentation, reported defects, and validated fixes before production releases.",
+    "techStack": ["Cross-Browser Testing", "Functional Testing", "QA Documentation"],
+    "image": "",
+    "githubUrl": "",
+    "liveUrl": "",
+    "featured": true
+  },
+  {
+    "id": "proj-5",
+    "title": "Timesheet Web Application",
+    "description": "Developed a timesheet management web application using Streamlit and PostgreSQL. Implemented features for employee timesheet tracking, validation, and report generation. Performed debugging, testing, and performance optimization to ensure smooth functionality.",
+    "techStack": ["Streamlit", "PostgreSQL", "Python", "Full-Stack"],
+    "image": "",
+    "githubUrl": "",
+    "liveUrl": "",
+    "featured": true
+  }
+]

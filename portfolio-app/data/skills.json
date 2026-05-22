@@ -1,0 +1,56 @@
+[
+  {
+    "id": "skill-1",
+    "category": "Automation Testing",
+    "skills": ["Playwright", "Selenium"],
+    "color": "cyan"
+  },
+  {
+    "id": "skill-2",
+    "category": "Manual Testing",
+    "skills": ["Functional Testing", "Regression Testing", "Smoke Testing", "End-to-End Testing", "Cross-Browser Testing", "STLC"],
+    "color": "purple"
+  },
+  {
+    "id": "skill-3",
+    "category": "API Testing",
+    "skills": ["Postman", "Swagger", "API Validation"],
+    "color": "emerald"
+  },
+  {
+    "id": "skill-4",
+    "category": "Languages",
+    "skills": ["JavaScript", "TypeScript", "Python", "SQL"],
+    "color": "amber"
+  },
+  {
+    "id": "skill-5",
+    "category": "Frontend",
+    "skills": ["React.js", "Next.js", "HTML", "CSS"],
+    "color": "blue"
+  },
+  {
+    "id": "skill-6",
+    "category": "Database",
+    "skills": ["PostgreSQL", "MySQL"],
+    "color": "rose"
+  },
+  {
+    "id": "skill-7",
+    "category": "Tools & Platforms",
+    "skills": ["Jira", "GitHub", "Bitbucket", "Trello", "Git"],
+    "color": "orange"
+  },
+  {
+    "id": "skill-8",
+    "category": "Development Methodologies",
+    "skills": ["Agile", "Scrum", "SDLC", "Defect Lifecycle"],
+    "color": "teal"
+  },
+  {
+    "id": "skill-9",
+    "category": "AI-Assisted Development",
+    "skills": ["ChatGPT", "Claude", "Gemini", "DeepSeek"],
+    "color": "violet"
+  }
+]

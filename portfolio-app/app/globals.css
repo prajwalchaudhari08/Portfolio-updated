@@ -1,0 +1,205 @@
+@import "tailwindcss";
+
+/* ==========================================
+   Custom Animations
+   ========================================== */
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes wave {
+  0%, 100% {
+    height: 3px;
+  }
+  50% {
+    height: 100%;
+  }
+}
+
+@keyframes scan {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(6, 182, 212, 0.6), 0 0 60px rgba(168, 85, 247, 0.3);
+  }
+}
+
+@keyframes glitch {
+  0%, 100% {
+    text-shadow: -1px 0 #22d3ee, 1px 0 #a855f7;
+  }
+  25% {
+    text-shadow: 1px 0 #22d3ee, -1px 0 #a855f7;
+  }
+  50% {
+    text-shadow: -1px 1px #22d3ee, 1px -1px #a855f7;
+  }
+  75% {
+    text-shadow: 1px -1px #22d3ee, -1px 1px #a855f7;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes orbit {
+  from {
+    transform: rotate(0deg) translateX(200px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(200px) rotate(-360deg);
+  }
+}
+
+/* ==========================================
+   Animation Utilities
+   ========================================== */
+
+.animate-shimmer {
+  animation: shimmer 1.5s infinite;
+}
+
+.animate-wave {
+  animation: wave 0.8s ease-in-out infinite;
+}
+
+.animate-scan {
+  animation: scan 3s linear infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+.animate-glitch {
+  animation: glitch 0.3s ease-in-out infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.6s ease-out forwards;
+}
+
+/* ==========================================
+   Mask Utilities
+   ========================================== */
+
+.mask-linear-fade {
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+/* ==========================================
+   Custom Scrollbar
+   ========================================== */
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(6, 182, 212, 0.3);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(6, 182, 212, 0.5);
+}
+
+/* ==========================================
+   Base Styles
+   ========================================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #09090b;
+  color: #e5e5e5;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(6, 182, 212, 0.3);
+  color: #ffffff;
+}
+
+/* ==========================================
+   Grid Background Pattern
+   ========================================== */
+
+.bg-grid {
+  background-image: 
+    linear-gradient(to right, rgba(128, 128, 128, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(128, 128, 128, 0.07) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ==========================================
+   Neon Text Gradient
+   ========================================== */
+
+.text-neon-gradient {
+  background: linear-gradient(135deg, #22d3ee, #ffffff, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

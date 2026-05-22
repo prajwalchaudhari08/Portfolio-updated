@@ -1,0 +1,14 @@
+{
+  "name": "Prajwal Chaudhari",
+  "title": "Software Engineer | QA Automation Engineer",
+  "summary": "QA Automation Engineer with hands-on experience in manual and automation testing using Playwright, JavaScript, Postman, Swagger, and SQL. Skilled in functional, regression, smoke, API, and end-to-end testing across multiple web applications. Experienced in Agile/Scrum workflows, defect lifecycle management, and full-stack application support using Next.js, Streamlit, and PostgreSQL.",
+  "email": "prajwalchaudhari89@gmail.com",
+  "phone": "7028650595",
+  "location": "Pune, Maharashtra",
+  "social": {
+    "linkedin": "https://linkedin.com/in/prajwalchaudhari",
+    "github": "https://github.com/prajwalchaudhari08"
+  },
+  "resumeUrl": "/resume.pdf",
+  "avatarUrl": ""
+}

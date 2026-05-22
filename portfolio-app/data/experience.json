@@ -1,0 +1,37 @@
+[
+  {
+    "id": "exp-1",
+    "role": "Software Engineer",
+    "company": "Unique School App India LLP",
+    "location": "Pune, India",
+    "period": "June 2025 – Present",
+    "achievements": [
+      "Executed manual and automation testing across 10+ web applications, ensuring software quality, functionality, and stable production releases",
+      "Developed and maintained Playwright automation scripts using JavaScript/TypeScript, reducing repetitive regression testing effort",
+      "Performed functional, regression, smoke, cross-browser, and end-to-end testing across multiple projects",
+      "Conducted API validation and backend testing using Postman and Swagger",
+      "Worked closely with developers and product teams to identify, debug, track, and resolve defects throughout the STLC and SDLC",
+      "Built and supported internal full-stack applications using Next.js, Streamlit, PostgreSQL, and SQL",
+      "Improved application maintainability by refactoring reusable UI components and optimizing backend workflows",
+      "Validated database operations and performed data verification using SQL queries",
+      "Participated in Agile/Scrum ceremonies including sprint planning, defect triaging, testing cycles, and deployment validation",
+      "Maintained detailed test cases, bug reports, QA documentation, and release verification reports"
+    ]
+  },
+  {
+    "id": "exp-2",
+    "role": "QA Intern / Software Testing Intern",
+    "company": "Unique School App India LLP",
+    "location": "Pune, India",
+    "period": "June 2024 – June 2025",
+    "achievements": [
+      "Performed manual testing across 10+ applications to validate functionality, UI responsiveness, and business requirements",
+      "Executed functional, regression, smoke, and usability testing to improve software reliability and user experience",
+      "Identified, documented, and tracked defects using Agile defect lifecycle processes while coordinating with development teams",
+      "Assisted in creating automation test scripts using Playwright with JavaScript",
+      "Prepared and maintained test cases, defect reports, and QA documentation for multiple releases",
+      "Participated in requirement analysis, release validation, retesting, and quality assurance activities",
+      "Gained practical experience in STLC, SDLC, Agile methodologies, API testing, and automation testing workflows"
+    ]
+  }
+]
