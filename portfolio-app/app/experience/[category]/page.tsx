@@ -23,8 +23,8 @@ const storyMeta: Record<string, { title: string; narration: string; subText: str
   },
   skills: {
     title: 'Skills & Capabilities',
-    narration: 'Accessing technical proficiency matrix and algorithmic specializations.',
-    subText: 'My neural pathways have been optimized for these specific technological domains...',
+    narration: 'Initializing core technical competencies and advanced engineering capabilities.',
+    subText: 'Built through real-world experience in testing automation, performance optimization, and modern application development.',
   },
   experience: {
     title: 'Work Experience',

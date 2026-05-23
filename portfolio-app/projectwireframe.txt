@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D F1 Portfolio Track</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #050510; /* Synthwave dark background */
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            user-select: none;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        /* UI Overlay Layer */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .header-container {
+            pointer-events: auto;
+            padding: 2rem 4rem;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #ff007f, #7928ca, #00bfff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(121, 40, 202, 0.5);
+        }
+
+        /* Controls Instructions */
+        .controls-panel {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(10, 10, 20, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            text-align: right;
+            pointer-events: auto;
+        }
+        
+        .key {
+            display: inline-block;
+            background: #222;
+            border: 1px solid #444;
+            border-radius: 4px;
+            padding: 0.2rem 0.6rem;
+            margin: 0 0.2rem;
+            font-family: monospace;
+            font-weight: bold;
+            color: #00bfff;
+            box-shadow: 0 2px 0 #111;
+        }
+
+        /* Information Panel */
+        #info-panel {
+            align-self: center;
+            margin-bottom: 3rem;
+            background: rgba(15, 15, 25, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-top: 4px solid #00bfff;
+            border-radius: 12px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 700px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: auto;
+            box-shadow: 0 10px 40px rgba(0, 191, 255, 0.15);
+        }
+
+        #info-panel.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .tag {
+            background: rgba(0, 150, 255, 0.1);
+            color: #00bfff;
+            border: 1px solid rgba(0, 150, 255, 0.3);
+            font-size: 0.75rem;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        .featured-badge {
+            color: #ffcc00;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        /* Start Overlay */
+        #start-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(5, 5, 16, 0.9);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+            transition: opacity 0.5s ease;
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #7928ca, #ff007f);
+            color: white;
+            padding: 1rem 3rem;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 0, 127, 0.8);
+        }
+        
+        /* Minimap */
+        #minimap {
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            width: 150px;
+            height: 150px;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid rgba(0, 191, 255, 0.3);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        #minimap-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #ff007f;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px #ff007f;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Start Screen -->
+    <div id="start-overlay">
+        <h1 class="text-6xl font-bold gradient-text mb-6 tracking-tighter">PROJECT CIRCUIT</h1>
+        <p class="text-gray-300 mb-8 text-xl max-w-2xl text-center">Take the wheel and drive through the deployed modules. Stop at checkpoints to view project details.</p>
+        <button class="start-btn" onclick="startGame()">Start Engine</button>
+    </div>
+
+    <!-- 3D Canvas -->
+    <div id="canvas-container"></div>
+
+    <!-- HTML UI Overlay -->
+    <div id="ui-layer">
+        <div class="flex justify-between w-full">
+            <div class="header-container">
+                <h1 class="text-4xl font-black text-white tracking-tight mb-1 uppercase italic">Deployed<br><span class="gradient-text">Modules</span></h1>
+                <div class="text-cyan-400 text-sm font-mono mt-2" id="speedometer">SPD: 000 km/h</div>
+            </div>
+
+            <div class="controls-panel">
+                <div class="text-sm text-gray-300 mb-2">DRIVE CONTROLS</div>
+                <div class="mb-1"><span class="key">W</span> / <span class="key">↑</span> Accelerate</div>
+                <div><span class="key">S</span> / <span class="key">↓</span> Brake / Reverse</div>
+            </div>
+        </div>
+
+        <!-- Minimap -->
+        <div id="minimap">
+            <div id="minimap-dot"></div>
+        </div>
+
+        <!-- Dynamic Info Panel -->
+        <div id="info-panel">
+            <div id="info-featured" class="featured-badge">Featured</div>
+            <h2 id="info-title" class="text-3xl font-bold mb-3 text-white">Project Title</h2>
+            <p id="info-desc" class="text-gray-300 text-base mb-6 leading-relaxed">Project description will appear here...</p>
+            <div id="info-tags" class="flex flex-wrap">
+                <!-- Tags injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const projectsData = [
+            {
+                title: "CMS Project",
+                description: "Performed end-to-end manual testing for CMS modules to ensure application quality and workflow stability. Automated regression and critical user flows using Playwright and TypeScript.",
+                tags: ["PLAYWRIGHT", "TYPESCRIPT", "CMS", "AUTOMATION"],
+                featured: true,
+                color: 0xb06ab3 // Purple
+            },
+            {
+                title: "YHD Project",
+                description: "Executed functional and regression testing for complete application workflows. Performed API testing using Postman and Swagger to validate endpoint reliability and data integrity.",
+                tags: ["POSTMAN", "SWAGGER", "API TESTING", "REGRESSION"],
+                featured: true,
+                color: 0x00bfff // Cyan
+            },
+            {
+                title: "Appendix Project",
+                description: "Conducted end-to-end manual testing to validate usability, business requirements, and application behavior. Designed and executed UI and functional test cases.",
+                tags: ["MANUAL TESTING", "UI TESTING", "UAT"],
+                featured: false,
+                color: 0x4568dc // Blue
+            },
+            {
+                title: "Module Alpha",
+                description: "Architecture design and implementation of core microservices. Integrated payment gateways and optimized database queries to improve response times by 40%.",
+                tags: ["NODE.JS", "EXPRESS", "MONGODB"],
+                featured: true,
+                color: 0xff007f // Pink
+            },
+            {
+                title: "Beta Systems",
+                description: "Real-time analytics dashboard with WebSocket integration. Visualized complex datasets using D3.js and Three.js for interactive client presentations.",
+                tags: ["REACT", "THREE.JS", "WEBSOCKETS"],
+                featured: false,
+                color: 0x7928ca // Deep Purple
+            },
+             {
+                title: "Gamma Core",
+                description: "Legacy system migration to scalable cloud infrastructure. Setup automated CI/CD pipelines and containerized micro-applications using Docker and Kubernetes.",
+                tags: ["DOCKER", "AWS", "CI/CD"],
+                featured: false,
+                color: 0x00ffaa // Mint
+            }
+        ];
+
+        // Three.js Core Variables
+        let scene, camera, renderer;
+        let trackCurve;
+        
+        // F1 Car Variables
+        let carGroup;
+        let carProgress = 0; // 0 to 1 along the curve
+        let carVelocity = 0;
+        let carAcceleration = 0;
+        const maxSpeed = 0.0015;
+        const accelerationRate = 0.00005;
+        const brakingRate = 0.0001;
+        const friction = 0.98;
+
+        // Input State
+        const keys = { w: false, s: false, up: false, down: false };
+
+        // Checkpoints
+        let checkpoints = [];
+        let currentActiveCheckpoint = -1;
+
+        // Camera Follow Target
+        let cameraTarget = new THREE.Object3D();
+
+        // UI Elements
+        const infoPanel = document.getElementById('info-panel');
+        const speedometer = document.getElementById('speedometer');
+        const minimapDot = document.getElementById('minimap-dot');
+        let gameStarted = false;
+
+        function init() {
+            // Scene Setup
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x050510, 0.015); // Dark synthwave fog
+
+            // Camera Setup
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            
+            // Renderer Setup
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Performance optimization
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+            scene.add(ambientLight);
+            
+            const dirLight = new THREE.DirectionalLight(0x7928ca, 1);
+            dirLight.position.set(100, 200, 50);
+            scene.add(dirLight);
+
+            // Build Game Objects
+            createEnvironment();
+            createTrack();
+            createCar();
+            createCheckpoints();
+
+            // Event Listeners
+            window.addEventListener('resize', onWindowResize, false);
+            document.addEventListener('keydown', onKeyDown);
+            document.addEventListener('keyup', onKeyUp);
+
+            // Start loop (paused until start button clicked)
+            renderer.render(scene, camera);
+        }
+
+        function createEnvironment() {
+            // Neon Grid Floor
+            const gridHelper = new THREE.GridHelper(1000, 100, 0x7928ca, 0x111122);
+            gridHelper.position.y = -10;
+            scene.add(gridHelper);
+
+            // Distant Stars/Particles
+            const particleCount = 1000;
+            const geo = new THREE.BufferGeometry();
+            const pos = new Float32Array(particleCount * 3);
+            for(let i=0; i<particleCount*3; i++) {
+                pos[i] = (Math.random() - 0.5) * 800;
+            }
+            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            const mat = new THREE.PointsMaterial({color: 0x00bfff, size: 0.5, transparent: true, opacity: 0.6});
+            const particles = new THREE.Points(geo, mat);
+            scene.add(particles);
+        }
+
+        function createTrack() {
+            // Define a winding closed loop for the track
+            const points = [
+                new THREE.Vector3(0, 0, 0),
+                new THREE.Vector3(0, 0, -100),
+                new THREE.Vector3(-100, 0, -200),
+                new THREE.Vector3(-200, 0, -150),
+                new THREE.Vector3(-250, 10, -50), // Slight elevation
+                new THREE.Vector3(-150, 0, 100),
+                new THREE.Vector3(50, 0, 200),
+                new THREE.Vector3(150, -10, 100), // Dip
+                new THREE.Vector3(100, 0, 0),
+                new THREE.Vector3(0, 0, 0)
+            ];
+
+            trackCurve = new THREE.CatmullRomCurve3(points);
+            trackCurve.closed = true;
+
+            // Track Geometry - Extrude a flat rectangle along the curve
+            const trackWidth = 8;
+            const shape = new THREE.Shape();
+            shape.moveTo(-trackWidth/2, -0.2);
+            shape.lineTo(trackWidth/2, -0.2);
+            shape.lineTo(trackWidth/2, 0.2);
+            shape.lineTo(-trackWidth/2, 0.2);
+            shape.lineTo(-trackWidth/2, -0.2);
+
+            const extrudeSettings = {
+                steps: 300,
+                extrudePath: trackCurve
+            };
+
+            const trackGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+            
+            // Dark asphalt material
+            const trackMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x111111,
+                roughness: 0.8,
+                metalness: 0.2
+            });
+            const trackMesh = new THREE.Mesh(trackGeometry, trackMaterial);
+            scene.add(trackMesh);
+
+            // Neon Edge Lines
+            const edges = new THREE.EdgesGeometry(trackGeometry, 20);
+            const lineMat = new THREE.LineBasicMaterial({ color: 0x00bfff, linewidth: 2 });
+            const neonEdges = new THREE.LineSegments(edges, lineMat);
+            scene.add(neonEdges);
+        }
+
+        function createCar() {
+            carGroup = new THREE.Group();
+
+            // Materials
+            const bodyMat = new THREE.MeshStandardMaterial({ color: 0x222222, metalness: 0.8, roughness: 0.2 });
+            const accentMat = new THREE.MeshStandardMaterial({ color: 0xff007f, emissive: 0x330011 });
+            const tireMat = new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.9 });
+
+            // Main Chassis
+            const chassisGeo = new THREE.BoxGeometry(1.5, 0.5, 4);
+            const chassis = new THREE.Mesh(chassisGeo, bodyMat);
+            chassis.position.y = 0.5;
+            carGroup.add(chassis);
+
+            // Nose
+            const noseGeo = new THREE.ConeGeometry(0.75, 2, 4);
+            const nose = new THREE.Mesh(noseGeo, bodyMat);
+            nose.rotation.x = Math.PI / 2;
+            nose.rotation.y = Math.PI / 4; // rotate square base to look like diamond wedge
+            nose.position.set(0, 0.5, 3);
+            carGroup.add(nose);
+
+            // Cockpit Dome
+            const domeGeo = new THREE.SphereGeometry(0.6, 16, 16, 0, Math.PI * 2, 0, Math.PI/2);
+            const domeMat = new THREE.MeshStandardMaterial({ color: 0x000000, metalness: 1, roughness: 0 });
+            const dome = new THREE.Mesh(domeGeo, domeMat);
+            dome.position.set(0, 0.75, -0.5);
+            dome.scale.z = 1.5;
+            carGroup.add(dome);
+
+            // Front Wing
+            const fWingGeo = new THREE.BoxGeometry(3, 0.1, 0.8);
+            const fWing = new THREE.Mesh(fWingGeo, accentMat);
+            fWing.position.set(0, 0.2, 3.8);
+            carGroup.add(fWing);
+
+            // Rear Wing
+            const rWingGeo = new THREE.BoxGeometry(2.5, 0.1, 1);
+            const rWing = new THREE.Mesh(rWingGeo, accentMat);
+            rWing.position.set(0, 1.2, -1.8);
+            carGroup.add(rWing);
+            
+            // Rear Wing Pillars
+            const pillarGeo = new THREE.BoxGeometry(0.1, 0.8, 0.5);
+            const p1 = new THREE.Mesh(pillarGeo, bodyMat);
+            p1.position.set(-0.8, 0.8, -1.8);
+            const p2 = p1.clone();
+            p2.position.set(0.8, 0.8, -1.8);
+            carGroup.add(p1, p2);
+
+            // Wheels
+            const wheelGeo = new THREE.CylinderGeometry(0.5, 0.5, 0.6, 16);
+            wheelGeo.rotateZ(Math.PI / 2);
+            
+            const wheelPositions = [
+                [-1.2, 0.5, 2.5], // Front Left
+                [1.2, 0.5, 2.5],  // Front Right
+                [-1.3, 0.6, -1.5], // Rear Left (slightly larger)
+                [1.3, 0.6, -1.5]   // Rear Right
+            ];
+
+            wheelPositions.forEach((pos, index) => {
+                const wheel = new THREE.Mesh(wheelGeo, tireMat);
+                wheel.position.set(...pos);
+                if(index > 1) { // Rear wheels are thicker
+                    wheel.scale.set(1.2, 1.2, 1.2);
+                }
+                
+                // Add neon rim
+                const rimGeo = new THREE.TorusGeometry(0.3, 0.05, 8, 16);
+                rimGeo.rotateY(Math.PI / 2);
+                const rimMat = new THREE.MeshBasicMaterial({ color: 0x00bfff });
+                const rim = new THREE.Mesh(rimGeo, rimMat);
+                if(index % 2 === 0) rim.position.x = -0.32; // Left side
+                else rim.position.x = 0.32; // Right side
+                wheel.add(rim);
+
+                carGroup.add(wheel);
+            });
+
+            // Headlights / Engine Glow
+            const glowMat = new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.8 });
+            const engineGlow = new THREE.Mesh(new THREE.PlaneGeometry(1, 0.5), glowMat);
+            engineGlow.position.set(0, 0.6, -2.1);
+            engineGlow.rotation.y = Math.PI;
+            carGroup.add(engineGlow);
+
+            // Add camera target object to car
+            carGroup.add(cameraTarget);
+            cameraTarget.position.set(0, 5, -12); // Position behind and above car
+
+            scene.add(carGroup);
+
+            // Set initial position
+            updateCarPosition(0);
+        }
+
+        function createCheckpoints() {
+            const spacing = 1.0 / projectsData.length;
+            
+            projectsData.forEach((project, index) => {
+                const progress = (index * spacing) + 0.05; // Offset slightly from start
+                const point = trackCurve.getPointAt(progress);
+                const tangent = trackCurve.getTangentAt(progress);
+                
+                // Arch geometry
+                const archGroup = new THREE.Group();
+                archGroup.position.copy(point);
+                
+                // Orient arch perpendicular to track
+                const up = new THREE.Vector3(0, 1, 0);
+                const right = new THREE.Vector3().crossVectors(tangent, up).normalize();
+                
+                // Construct glowing ring
+                const ringGeo = new THREE.TorusGeometry(8, 0.3, 16, 50);
+                // Rotate to stand up
+                ringGeo.rotateX(Math.PI / 2);
+                ringGeo.rotateY(Math.PI / 2);
+                
+                const ringMat = new THREE.MeshStandardMaterial({ 
+                    color: project.color, 
+                    emissive: project.color,
+                    emissiveIntensity: 0.5,
+                    transparent: true,
+                    opacity: 0.8
+                });
+                
+                const ring = new THREE.Mesh(ringGeo, ringMat);
+                
+                // Orient ring to face down the track
+                const lookAtPos = point.clone().add(tangent);
+                archGroup.lookAt(lookAtPos);
+                
+                archGroup.add(ring);
+
+                // Add a small ground marker
+                const markerGeo = new THREE.PlaneGeometry(10, 4);
+                const markerMat = new THREE.MeshBasicMaterial({ 
+                    color: project.color, 
+                    transparent: true, 
+                    opacity: 0.4,
+                    side: THREE.DoubleSide
+                });
+                const marker = new THREE.Mesh(markerGeo, markerMat);
+                marker.rotation.x = -Math.PI / 2;
+                marker.position.y = 0.5; // Slightly above track
+                archGroup.add(marker);
+
+                scene.add(archGroup);
+
+                // Store checkpoint data for collision detection
+                checkpoints.push({
+                    progress: progress,
+                    data: project,
+                    ring: ring
+                });
+            });
+        }
+
+        function onKeyDown(e) {
+            if(e.key === 'w' || e.key === 'ArrowUp') keys.w = true;
+            if(e.key === 's' || e.key === 'ArrowDown') keys.s = true;
+        }
+
+        function onKeyUp(e) {
+            if(e.key === 'w' || e.key === 'ArrowUp') keys.w = false;
+            if(e.key === 's' || e.key === 'ArrowDown') keys.s = false;
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function startGame() {
+            document.getElementById('start-overlay').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('start-overlay').style.display = 'none';
+                gameStarted = true;
+                animate();
+            }, 500);
+        }
+
+        function updateUI(projectData) {
+            if (projectData) {
+                document.getElementById('info-title').textContent = projectData.title;
+                document.getElementById('info-desc').textContent = projectData.description;
+                document.getElementById('info-title').style.color = '#' + projectData.color.toString(16).padStart(6, '0');
+                document.getElementById('info-panel').style.borderTopColor = '#' + projectData.color.toString(16).padStart(6, '0');
+                
+                const featuredEl = document.getElementById('info-featured');
+                featuredEl.style.display = projectData.featured ? 'block' : 'none';
+
+                const tagsContainer = document.getElementById('info-tags');
+                tagsContainer.innerHTML = '';
+                projectData.tags.forEach(tag => {
+                    const tagEl = document.createElement('span');
+                    tagEl.className = 'tag';
+                    tagEl.textContent = tag;
+                    tagsContainer.appendChild(tagEl);
+                });
+
+                infoPanel.classList.add('visible');
+            } else {
+                infoPanel.classList.remove('visible');
+            }
+        }
+
+        function updateCarPosition(progress) {
+            // Get position and orientation from curve
+            const position = trackCurve.getPointAt(progress);
+            const tangent = trackCurve.getTangentAt(progress);
+            
+            // Update Car Position
+            carGroup.position.copy(position);
+            
+            // Update Car Rotation to look along the curve
+            const lookAtTarget = position.clone().add(tangent);
+            carGroup.lookAt(lookAtTarget);
+
+            // Add slight roll based on curvature (optional, makes it look more dynamic)
+            // carGroup.rotation.z += some_calculated_roll; 
+        }
+
+        function animate() {
+            if (!gameStarted) return;
+            requestAnimationFrame(animate);
+
+            // 1. Calculate Car Physics
+            if (keys.w) {
+                carAcceleration = accelerationRate;
+            } else if (keys.s) {
+                carAcceleration = -brakingRate;
+            } else {
+                carAcceleration = 0;
+            }
+
+            carVelocity += carAcceleration;
+            carVelocity *= friction; // apply friction
+            
+            // Cap speed
+            if (carVelocity > maxSpeed) carVelocity = maxSpeed;
+            if (carVelocity < -maxSpeed/2) carVelocity = -maxSpeed/2; // slower reverse
+
+            // Update progress
+            carProgress += carVelocity;
+            
+            // Loop track
+            if (carProgress > 1) carProgress -= 1;
+            if (carProgress < 0) carProgress += 1;
+
+            // Update 3D car
+            updateCarPosition(carProgress);
+
+            // 2. Camera Follow Logic
+            // Smoothly move camera towards the target position attached behind the car
+            const targetPos = new THREE.Vector3();
+            cameraTarget.getWorldPosition(targetPos);
+            
+            // Lerp camera position
+            camera.position.lerp(targetPos, 0.1);
+            
+            // Look slightly ahead of the car
+            const lookAheadProgress = (carProgress + 0.02) % 1;
+            const lookAheadPoint = trackCurve.getPointAt(lookAheadProgress);
+            // Smooth lookat
+            const currentLookAt = new THREE.Vector3(0,0,-1).applyQuaternion(camera.quaternion).add(camera.position);
+            currentLookAt.lerp(lookAheadPoint, 0.1);
+            camera.lookAt(currentLookAt);
+
+            // 3. UI Updates
+            // Speedometer
+            const displaySpeed = Math.abs(Math.round((carVelocity / maxSpeed) * 320)); // arbitrary km/h scaling
+            speedometer.textContent = `SPD: ${displaySpeed.toString().padStart(3, '0')} km/h`;
+
+            // Minimap Dot
+            // Map carProgress (0-1) to an angle around the circular minimap
+            const angle = carProgress * Math.PI * 2 - (Math.PI / 2);
+            const radius = 60; // radius of minimap interior
+            const mmX = Math.cos(angle) * radius + 75; // 75 is center
+            const mmY = Math.sin(angle) * radius + 75;
+            minimapDot.style.left = `${mmX}px`;
+            minimapDot.style.top = `${mmY}px`;
+
+            // 4. Checkpoint Detection
+            let nearestCheckpoint = null;
+            let minDistance = 0.02; // Threshold to trigger UI (approx length of car)
+
+            checkpoints.forEach((cp, index) => {
+                // Handle looping edge case for distance calculation
+                let dist = Math.abs(carProgress - cp.progress);
+                if (dist > 0.5) dist = 1.0 - dist;
+
+                // Make ring pulse
+                cp.ring.scale.setScalar(1 + Math.sin(Date.now() * 0.005 + index) * 0.05);
+
+                if (dist < minDistance) {
+                    nearestCheckpoint = { index: index, data: cp.data };
+                }
+            });
+
+            // Show UI if near a checkpoint AND moving slowly enough to read
+            if (nearestCheckpoint && Math.abs(carVelocity) < (maxSpeed * 0.4)) {
+                if (currentActiveCheckpoint !== nearestCheckpoint.index) {
+                    currentActiveCheckpoint = nearestCheckpoint.index;
+                    updateUI(nearestCheckpoint.data);
+                }
+            } else {
+                if (currentActiveCheckpoint !== -1) {
+                    currentActiveCheckpoint = -1;
+                    updateUI(null);
+                }
+            }
+
+            // Render Scene
+            renderer.render(scene, camera);
+        }
+
+        init();
+    </script>
+</body>
+</html>
