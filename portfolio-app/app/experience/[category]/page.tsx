@@ -10,6 +10,7 @@ import NeonButton from '@/components/ui/NeonButton';
 import VoiceWaveform from '@/components/ui/VoiceWaveform';
 import { useIsMobile } from '@/hooks/useMediaQuery';
 import { useAIVoice } from '@/hooks/useAIVoice';
+import { useAudioStore } from '@/store/useAudioStore';
 import type { Profile, SkillCategory, Education, Experience } from '@/types';
 
 const Scene = dynamic(() => import('@/components/3d/Scene'), { ssr: false });
@@ -68,6 +69,7 @@ export default function StoryPage() {
   const [education, setEducation] = useState<Education[]>([]);
   const [experience, setExperience] = useState<Experience[]>([]);
   const { speak, stop, isPlaying } = useAIVoice();
+  const { subtitlesVisible } = useAudioStore();
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const meta = storyMeta[category] || storyMeta.about;
@@ -295,12 +297,14 @@ export default function StoryPage() {
           className="mt-6 md:mt-8 flex flex-col items-center justify-center space-y-3 w-full max-w-3xl mx-auto"
         >
           <VoiceWaveform isPlaying={isPlaying} />
-          <div className="bg-black/60 backdrop-blur-md px-6 py-3 rounded-full border border-white/10 text-center w-full md:w-auto">
-            <p className="text-sm md:text-base text-gray-200 font-light">
-              <span className="text-cyan-400 font-mono mr-2">&gt;</span>
-              {meta.narration.slice(0, 70)}...
-            </p>
-          </div>
+          {subtitlesVisible && (
+            <div className="bg-black/60 backdrop-blur-md px-6 py-3 rounded-full border border-white/10 text-center w-full md:w-auto">
+              <p className="text-sm md:text-base text-gray-200 font-light">
+                <span className="text-cyan-400 font-mono mr-2">&gt;</span>
+                {meta.narration.slice(0, 70)}...
+              </p>
+            </div>
+          )}
         </motion.div>
       </div>
     </div>

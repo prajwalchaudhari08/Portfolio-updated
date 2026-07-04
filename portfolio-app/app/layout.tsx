@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import AIAvatar from "@/components/ui/AIAvatar";
+import AudioHUD from "@/components/ui/AudioHUD";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -43,6 +44,7 @@ export default function RootLayout({
       >
         {children}
         <AIAvatar />
+        <AudioHUD />
       </body>
     </html>
   );

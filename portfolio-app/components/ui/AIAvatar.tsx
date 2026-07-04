@@ -8,8 +8,8 @@ export default function AIAvatar() {
   const { isPlaying } = useAudioStore();
   const pathname = usePathname();
 
-  // Hide avatar on the 3D circuit page — it overlaps touch controls
-  if (pathname === '/projects') return null;
+  // Hide avatar on the 3D circuit page or admin pages
+  if (pathname === '/projects' || pathname?.startsWith('/admin')) return null;
 
   return (
     // On mobile: anchor to bottom-right but well above any bottom HUD buttons.

@@ -12,9 +12,6 @@ import {
   GraduationCap,
   Mail,
   Activity,
-  Rocket,
-  Target,
-  Sparkles,
 } from 'lucide-react';
 import GlassPanel from '@/components/ui/GlassPanel';
 import { useIsMobile } from '@/hooks/useMediaQuery';
@@ -27,11 +24,7 @@ const cards = [
   { id: 'skills', title: 'Skills', icon: Cpu, color: 'text-emerald-400', glow: 'hover:shadow-[0_0_30px_rgba(16,185,129,0.4)]' },
   { id: 'experience', title: 'Experience', icon: Briefcase, color: 'text-amber-400', glow: 'hover:shadow-[0_0_30px_rgba(245,158,11,0.4)]' },
   { id: 'education', title: 'Education', icon: GraduationCap, color: 'text-blue-400', glow: 'hover:shadow-[0_0_30px_rgba(59,130,246,0.4)]' },
-  { id: 'ai-journey', title: 'AI Journey', icon: Sparkles, color: 'text-violet-400', glow: 'hover:shadow-[0_0_30px_rgba(139,92,246,0.4)]' },
-  { id: 'startup-vision', title: 'Startup Vision', icon: Rocket, color: 'text-orange-400', glow: 'hover:shadow-[0_0_30px_rgba(249,115,22,0.4)]' },
-  { id: 'future-goals', title: 'Future Goals', icon: Target, color: 'text-teal-400', glow: 'hover:shadow-[0_0_30px_rgba(20,184,166,0.4)]' },
   { id: 'contact', title: 'Contact', icon: Mail, color: 'text-rose-400', glow: 'hover:shadow-[0_0_30px_rgba(244,63,94,0.4)]' },
-  { id: 'fun-facts', title: 'Fun Facts', icon: Activity, color: 'text-pink-400', glow: 'hover:shadow-[0_0_30px_rgba(236,72,153,0.4)]' },
 ];
 
 export default function ExperienceHub() {
@@ -89,7 +82,7 @@ export default function ExperienceHub() {
         </motion.div>
 
         {/* Cards Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-4 max-w-5xl w-full">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4 max-w-5xl w-full">
           {cards.map((card, index) => (
             <motion.div
               key={card.id}

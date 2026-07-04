@@ -9,6 +9,7 @@ import NeonButton from '@/components/ui/NeonButton';
 type FormStatus = 'idle' | 'sending' | 'success' | 'failed';
 
 export default function ContactForm() {
+  const contactEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'prajwalchaudhari89@gmail.com';
   const [status, setStatus] = useState<FormStatus>('idle');
   const [formData, setFormData] = useState({
     name: '',
@@ -49,9 +50,9 @@ export default function ContactForm() {
       <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 blur-[80px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/10 blur-[60px] rounded-full pointer-events-none" />
 
-      <h2 className="text-3xl font-bold mb-2 text-white">Establish Uplink</h2>
+      <h2 className="text-3xl font-bold mb-2 text-white">Get in Touch</h2>
       <p className="text-gray-400 mb-8 font-mono text-sm">
-        TARGET: contact.protocol@neural.link
+        Direct contact: {contactEmail}
       </p>
 
       <AnimatePresence mode="wait">
@@ -67,10 +68,10 @@ export default function ContactForm() {
               <Activity className="text-emerald-400 w-10 h-10 animate-pulse" />
             </div>
             <h3 className="text-2xl text-emerald-400 font-bold mb-3">
-              Transmission Successful
+              Message Sent Securely
             </h3>
             <p className="text-gray-400 text-sm mb-8">
-              Your message has been encrypted and delivered successfully.
+              Thank you for reaching out. Your secure message has been successfully delivered.
             </p>
             <NeonButton onClick={resetForm} icon={RotateCcw}>
               Initiate New Transfer
@@ -111,8 +112,8 @@ export default function ContactForm() {
             className="space-y-6 relative z-10"
           >
             <div className="space-y-2">
-              <label className="text-xs font-mono text-gray-500 uppercase tracking-widest">
-                Identification
+              <label className="text-xs font-mono text-gray-400 uppercase tracking-widest">
+                FULL NAME
               </label>
               <input
                 required
@@ -121,14 +122,14 @@ export default function ContactForm() {
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
-                className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-cyan-500/50 focus:bg-cyan-950/20 transition-all placeholder:text-gray-600"
-                placeholder="Enter Name"
+                className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-cyan-500/50 focus:bg-cyan-950/20 transition-all placeholder:text-gray-600 font-light"
+                placeholder="Enter your name"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-mono text-gray-500 uppercase tracking-widest">
-                Return Vector (Email)
+              <label className="text-xs font-mono text-gray-400 uppercase tracking-widest">
+                EMAIL ADDRESS
               </label>
               <input
                 required
@@ -137,14 +138,14 @@ export default function ContactForm() {
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-cyan-500/50 focus:bg-cyan-950/20 transition-all placeholder:text-gray-600"
+                className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-cyan-500/50 focus:bg-cyan-950/20 transition-all placeholder:text-gray-600 font-light"
                 placeholder="name@domain.com"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-mono text-gray-500 uppercase tracking-widest">
-                Data Payload
+              <label className="text-xs font-mono text-gray-400 uppercase tracking-widest">
+                HOW CAN WE HELP?
               </label>
               <textarea
                 required
@@ -153,8 +154,8 @@ export default function ContactForm() {
                 onChange={(e) =>
                   setFormData({ ...formData, message: e.target.value })
                 }
-                className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-cyan-500/50 focus:bg-cyan-950/20 transition-all resize-none placeholder:text-gray-600"
-                placeholder="Initiate communication protocol..."
+                className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-cyan-500/50 focus:bg-cyan-950/20 transition-all resize-none placeholder:text-gray-600 font-light"
+                placeholder="Type your message here..."
               />
             </div>
 
@@ -166,8 +167,8 @@ export default function ContactForm() {
               variant={status === 'sending' ? 'secondary' : 'primary'}
             >
               {status === 'sending'
-                ? 'Encrypting & Transmitting...'
-                : 'Send Payload'}
+                ? 'SENDING...'
+                : 'SEND MESSAGE'}
             </NeonButton>
           </motion.form>
         )}

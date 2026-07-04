@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Eye, Loader2 } from 'lucide-react';
+import { Eye, Loader2, Trash2 } from 'lucide-react';
 import GlassPanel from '@/components/ui/GlassPanel';
 import type { EmailLog } from '@/types';
 
@@ -10,6 +10,7 @@ export default function AdminEmailsPage() {
   const [emails, setEmails] = useState<EmailLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<EmailLog | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/emails')
@@ -18,6 +19,30 @@ export default function AdminEmailsPage() {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this email log?')) return;
+    setDeletingId(id);
+    try {
+      const res = await fetch(`/api/emails?id=${id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        setEmails((prev) => prev.filter((email) => email.id !== id));
+        if (selected?.id === id) {
+          setSelected(null);
+        }
+      } else {
+        const errData = await res.json();
+        alert(errData.error || 'Failed to delete email log');
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Error deleting email log');
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   if (loading) {
     return <div className="flex items-center justify-center h-64 text-gray-500 font-mono"><Loader2 className="w-6 h-6 animate-spin mr-2" /> Loading...</div>;
@@ -41,7 +66,18 @@ export default function AdminEmailsPage() {
                 <h3 className="text-lg font-bold text-white">{selected.name}</h3>
                 <p className="text-sm text-cyan-400 font-mono">{selected.email}</p>
               </div>
-              <button onClick={() => setSelected(null)} className="text-gray-500 hover:text-white text-sm font-mono">Close</button>
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => handleDelete(selected.id)}
+                  disabled={deletingId === selected.id}
+                  className="text-gray-500 hover:text-rose-400 disabled:text-gray-700 transition-colors text-sm font-mono flex items-center gap-1.5"
+                  title="Delete this payload"
+                >
+                  <Trash2 size={15} />
+                  <span>DELETE</span>
+                </button>
+                <button onClick={() => setSelected(null)} className="text-gray-500 hover:text-white text-sm font-mono">Close</button>
+              </div>
             </div>
             <div className="bg-black/50 border border-white/10 rounded-lg p-4 mb-3">
               <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">{selected.message}</p>
@@ -97,9 +133,19 @@ export default function AdminEmailsPage() {
                       )}
                     </td>
                     <td className="p-4 text-right">
-                      <button onClick={() => setSelected(log)} className="text-gray-500 hover:text-white transition-colors">
-                        <Eye size={16} />
-                      </button>
+                      <div className="flex justify-end gap-3">
+                        <button onClick={() => setSelected(log)} className="text-gray-500 hover:text-white transition-colors" title="View details">
+                          <Eye size={16} />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(log.id)}
+                          disabled={deletingId === log.id}
+                          className="text-gray-500 hover:text-rose-400 disabled:text-gray-700 transition-colors"
+                          title="Delete log"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

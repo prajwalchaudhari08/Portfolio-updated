@@ -3,12 +3,11 @@
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import { Play, Download, Mail, Volume2, VolumeX, Subtitles, GraduationCap, Briefcase, Code, Rocket, Lock } from 'lucide-react';
+import { Play, Download, Mail, GraduationCap, Briefcase, Code, Rocket, Lock } from 'lucide-react';
 import NeonButton from '@/components/ui/NeonButton';
 import AnimatedText from '@/components/ui/AnimatedText';
 import LoadingScreen from '@/components/ui/LoadingScreen';
 import QuestionCard from '@/components/ui/QuestionCard';
-import { useAudioStore } from '@/store/useAudioStore';
 import { useAIVoice } from '@/hooks/useAIVoice';
 import { useIsMobile } from '@/hooks/useMediaQuery';
 import { useRouter } from 'next/navigation';
@@ -17,7 +16,6 @@ const Scene = dynamic(() => import('@/components/3d/Scene'), { ssr: false });
 
 export default function HomePage() {
   const [showLoading, setShowLoading] = useState(true);
-  const { isMuted, toggleMute, subtitlesVisible, toggleSubtitles } = useAudioStore();
   const { speak } = useAIVoice();
   const isMobile = useIsMobile();
   const router = useRouter();
@@ -28,7 +26,7 @@ export default function HomePage() {
   };
 
   const skills = [
-    'React.js', 'Next.js', 'Tailwind CSS', 'Node.js', 
+    'React.js', 'Next.js', 'Tailwind CSS', 'Node.js',
     'TypeScript', 'MongoDB', 'AI Integrations'
   ];
 
@@ -75,7 +73,7 @@ export default function HomePage() {
 
       {/* Main Content Container */}
       <div className="relative z-10 w-full max-w-5xl mx-auto px-4 md:px-8 pb-32">
-        
+
         {/* Hero Section */}
         <section className="min-h-[90vh] flex flex-col items-center justify-center text-center pt-20 pb-10">
           <motion.div
@@ -128,7 +126,7 @@ export default function HomePage() {
                 Download Resume
               </NeonButton>
             </a>
-            <NeonButton variant="ghost" onClick={() => window.location.href = 'mailto:contact@example.com'} icon={Mail}>
+            <NeonButton variant="ghost" onClick={() => router.push('/contact')} icon={Mail}>
               Contact Me
             </NeonButton>
           </motion.div>
@@ -200,26 +198,7 @@ export default function HomePage() {
         </button>
       </div>
 
-      {/* Bottom HUD */}
-      <div className="fixed bottom-6 left-6 flex gap-4 z-50">
-        <button
-          onClick={toggleMute}
-          className="text-gray-500 hover:text-cyan-400 transition-colors bg-black/40 p-2 rounded-full backdrop-blur border border-white/5"
-          aria-label="Toggle audio"
-        >
-          {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-        </button>
-        <button
-          onClick={toggleSubtitles}
-          className="text-gray-500 hover:text-cyan-400 transition-colors bg-black/40 p-2 rounded-full backdrop-blur border border-white/5"
-          aria-label="Toggle subtitles"
-        >
-          <Subtitles
-            size={20}
-            className={subtitlesVisible ? 'text-cyan-400' : ''}
-          />
-        </button>
-      </div>
+
     </div>
   );
 }

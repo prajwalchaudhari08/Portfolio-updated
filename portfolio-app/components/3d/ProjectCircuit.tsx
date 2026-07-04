@@ -9,6 +9,7 @@ import React, {
 import * as THREE from 'three';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useAudioStore } from '@/store/useAudioStore';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -181,10 +182,26 @@ function createCheckpointFlash(
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export default function ProjectCircuit() {
+export default function ProjectCircuit({ onReturn }: { onReturn?: () => void }) {
   const mountRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const engineRef = useRef(new EngineSound());
+
+  const { isMuted, subtitlesVisible } = useAudioStore();
+  const isMutedRef = useRef(isMuted);
+  const subtitlesVisibleRef = useRef(subtitlesVisible);
+
+  useEffect(() => {
+    isMutedRef.current = isMuted;
+    if (isMuted && typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+      setVoiceLabel('');
+    }
+  }, [isMuted]);
+
+  useEffect(() => {
+    subtitlesVisibleRef.current = subtitlesVisible;
+  }, [subtitlesVisible]);
 
   const [gameStarted, setGameStarted] = useState(false);
   const [activeProject, setActiveProject] = useState<ProjectData | null>(null);
@@ -585,7 +602,14 @@ export default function ProjectCircuit() {
           // Voice narration
           const line = CHECKPOINT_VOICE_LINES[n.index % CHECKPOINT_VOICE_LINES.length];
           setVoiceLabel(line);
-          speakCheckpoint(line, () => setVoiceLabel(''));
+          if (!isMutedRef.current) {
+            speakCheckpoint(line, () => setVoiceLabel(''));
+          } else {
+            const lineToClear = line;
+            setTimeout(() => {
+              setVoiceLabel((prev) => (prev === lineToClear ? '' : prev));
+            }, 3000);
+          }
 
           // Haptic feedback (mobile)
           if (navigator.vibrate) navigator.vibrate([60, 30, 60]);
@@ -773,7 +797,7 @@ export default function ProjectCircuit() {
           {/* Top-left: Back + Title + Speed */}
           <div className="absolute top-4 left-4 md:top-6 md:left-6 pointer-events-auto">
             <button
-              onClick={() => router.push('/experience')}
+              onClick={onReturn || (() => router.push('/experience'))}
               className="flex items-center gap-1.5 mb-3 text-gray-400 hover:text-cyan-400 transition-colors text-xs md:text-sm font-mono bg-black/50 px-3 py-1.5 rounded-full border border-white/10 backdrop-blur"
             >
               <ArrowLeft size={13} />
@@ -820,7 +844,7 @@ export default function ProjectCircuit() {
           )}
 
           {/* ── AI Voice Label ───────────────────────────────────────────── */}
-          {voiceLabel && (
+          {voiceLabel && subtitlesVisible && (
             <div
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
               style={{
