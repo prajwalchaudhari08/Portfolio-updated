@@ -1,5 +1,46 @@
 [
   {
+    "id": "dcc77360-703a-472c-b48d-f911e71bd9a1",
+    "name": "Prajwal chaudhari",
+    "email": "prajwalchaudhari532@gmail.com",
+    "message": "we need to hire you",
+    "status": "success",
+    "timestamp": "2026-07-05T12:37:04.167Z"
+  },
+  {
+    "id": "a8015347-39f1-46c7-b9f4-ba77ebc4e596",
+    "name": "Prajwal Chaudhari",
+    "email": "prajwalchaudhari89@gmail.com",
+    "message": "This is a testing message to confirm dual delivery works.",
+    "status": "success",
+    "timestamp": "2026-07-05T12:35:14.291Z"
+  },
+  {
+    "id": "6e22b93b-38be-421f-9887-2fd3cb9d337f",
+    "name": "Prajwal chaudhari",
+    "email": "prajwalchaudhari532@gmail.com",
+    "message": "we need to hire your",
+    "status": "success",
+    "timestamp": "2026-07-05T12:30:53.744Z"
+  },
+  {
+    "id": "aae15581-ed5c-4e94-8177-01c66f188f7c",
+    "name": "Prajwal chaudhari",
+    "email": "prajwalchaudhari532@gmail.com",
+    "message": "we are need to hire you",
+    "status": "success",
+    "timestamp": "2026-07-05T12:24:36.215Z"
+  },
+  {
+    "id": "6c363a27-af76-4403-8b02-72f46b778cbc",
+    "name": "Test User",
+    "email": "test@example.com",
+    "message": "Hello, this is a test message.",
+    "status": "failed",
+    "timestamp": "2026-07-05T12:13:54.516Z",
+    "error": "Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials 5a478bee46e88-3114fe08b1bsm6042808eec.26 - gsmtp"
+  },
+  {
     "id": "e8cb1797-7b3d-40da-930c-3b434f6e6392",
     "name": "test",
     "email": "test@gmail.com",
